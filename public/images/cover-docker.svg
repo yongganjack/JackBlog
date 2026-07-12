@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-label="Docker article cover">
+  <rect width="720" height="420" rx="28" fill="#e0f2fe"/>
+  <path d="M164 232h390c-20 74-74 112-162 112H276c-70 0-112-37-112-112Z" fill="#0369a1"/>
+  <rect x="230" y="136" width="58" height="44" rx="8" fill="#38bdf8"/>
+  <rect x="300" y="136" width="58" height="44" rx="8" fill="#38bdf8"/>
+  <rect x="370" y="136" width="58" height="44" rx="8" fill="#38bdf8"/>
+  <rect x="300" y="84" width="58" height="44" rx="8" fill="#7dd3fc"/>
+  <rect x="370" y="84" width="58" height="44" rx="8" fill="#7dd3fc"/>
+  <circle cx="560" cy="200" r="26" fill="#0284c7"/>
+</svg>

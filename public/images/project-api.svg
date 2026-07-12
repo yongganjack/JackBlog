@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400" role="img" aria-label="API Mock project">
+  <rect width="640" height="400" rx="28" fill="#f0fdf4"/>
+  <rect x="118" y="88" width="404" height="224" rx="24" fill="#052e16"/>
+  <path d="M162 146h160M162 200h242M162 254h112" stroke="#86efac" stroke-width="14" stroke-linecap="round"/>
+  <path d="M422 158l42 42-42 42" stroke="#22c55e" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

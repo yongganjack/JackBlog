@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-label="Next.js article cover">
+  <rect width="720" height="420" rx="28" fill="#f8fafc"/>
+  <circle cx="360" cy="210" r="132" fill="#111827"/>
+  <path d="M286 278V142h28l120 136V142" stroke="#fff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M448 280 330 142" stroke="#60a5fa" stroke-width="16" stroke-linecap="round"/>
+</svg>

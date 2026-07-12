@@ -1,0 +1,25 @@
+---
+const items = [
+  { href: "#why-astro", label: "为什么选择 Astro" },
+  { href: "#structure", label: "项目结构设计" },
+  { href: "#typography", label: "写作体验优化" },
+  { href: "#deploy", label: "静态部署策略" },
+  { href: "#summary", label: "总结" }
+];
+---
+
+<aside class="sticky top-24 hidden xl:block">
+  <div class="surface-card rounded-[20px] p-5">
+    <h2 class="text-sm font-bold text-[color:var(--text)]">目录</h2>
+    <nav class="mt-4 grid gap-3 text-sm" aria-label="文章目录">
+      {
+        items.map((item, index) => (
+          <a class="flex gap-3 rounded-xl px-2 py-1.5 text-[color:var(--muted)] hover:bg-[color:var(--surface-soft)] hover:text-[color:var(--primary)]" href={item.href}>
+            <span class="font-mono text-xs tabular-nums">{index + 1}.</span>
+            <span>{item.label}</span>
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</aside>

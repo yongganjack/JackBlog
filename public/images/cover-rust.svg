@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-label="Rust article cover">
+  <rect width="720" height="420" rx="28" fill="#fff7ed"/>
+  <circle cx="360" cy="210" r="122" fill="#fed7aa"/>
+  <circle cx="360" cy="210" r="76" fill="#fb923c"/>
+  <path d="M360 88v244M238 210h244M274 124l172 172M446 124 274 296" stroke="#9a3412" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="360" cy="210" r="34" fill="#fff7ed"/>
+</svg>

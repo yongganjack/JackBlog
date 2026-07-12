@@ -1,0 +1,70 @@
+---
+import Icon from "@/components/Icon.astro";
+import TagPill from "@/components/TagPill.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { siteConfig, tags, timeline } from "@/data/site";
+---
+
+<BaseLayout title="关于">
+  <section class="container-page grid gap-10 pb-12 pt-16 lg:grid-cols-[360px_1fr]">
+    <aside class="surface-card h-max rounded-[28px] p-6">
+      <img
+        src="/images/avatar.svg"
+        alt="Alex 的头像插画"
+        width="420"
+        height="420"
+        fetchpriority="high"
+        class="mx-auto aspect-square w-44 rounded-full"
+      />
+      <h1 class="mt-6 text-center text-3xl font-extrabold text-[color:var(--text)]">Alex</h1>
+      <p class="mt-2 text-center text-sm leading-7 text-[color:var(--muted)]">{siteConfig.role}</p>
+      <div class="mt-6 flex justify-center gap-2">
+        <a class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--border)] text-[color:var(--body)] hover:text-[color:var(--primary)]" href={siteConfig.socials.github} aria-label="GitHub">
+          <Icon name="github" />
+        </a>
+        <a class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--border)] text-[color:var(--body)] hover:text-[color:var(--primary)]" href={siteConfig.socials.email} aria-label="发送邮件">
+          <Icon name="mail" />
+        </a>
+        <a class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--border)] text-[color:var(--body)] hover:text-[color:var(--primary)]" href={siteConfig.socials.x} aria-label="X 主页">
+          <Icon name="x" />
+        </a>
+      </div>
+    </aside>
+
+    <div class="min-w-0">
+      <div class="surface-card rounded-[28px] p-6 md:p-8">
+        <h2 class="section-title">关于我</h2>
+        <p class="mt-5 text-base leading-8 text-[color:var(--body)]">
+          我是一名关注 AI 产品化、全栈工程和独立开发的技术创作者。这个博客记录我的技术实践、系统设计、工具打磨和一些关于长期主义的思考。
+        </p>
+        <p class="mt-4 text-base leading-8 text-[color:var(--body)]">
+          我喜欢把复杂系统拆成可理解的小块，也相信高质量的写作能让工程判断变得更清晰。
+        </p>
+      </div>
+
+      <section class="mt-8">
+        <h2 class="section-title">技能标签</h2>
+        <div class="mt-5 flex flex-wrap gap-3">
+          {tags.slice(0, 12).map(([tag, count]) => <TagPill label={tag} count={count} />)}
+        </div>
+      </section>
+
+      <section class="mt-10">
+        <h2 class="section-title">经历时间线</h2>
+        <div class="mt-6 grid gap-4">
+          {
+            timeline.map((item) => (
+              <article class="surface-card grid gap-3 rounded-[20px] p-5 sm:grid-cols-[88px_1fr]">
+                <div class="font-mono text-sm font-bold tabular-nums text-[color:var(--primary)]">{item.year}</div>
+                <div>
+                  <h3 class="font-bold text-[color:var(--text)]">{item.title}</h3>
+                  <p class="mt-2 text-sm leading-7 text-[color:var(--muted)]">{item.body}</p>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>

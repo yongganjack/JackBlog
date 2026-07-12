@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-label="LLM article cover">
+  <rect width="720" height="420" rx="28" fill="#111827"/>
+  <rect x="110" y="90" width="500" height="240" rx="28" fill="#1f2937"/>
+  <path d="M158 150h238M158 196h356M158 242h288" stroke="#94a3b8" stroke-width="14" stroke-linecap="round"/>
+  <path d="M502 252c38-36 58-75 58-117" stroke="#60a5fa" stroke-width="16" fill="none" stroke-linecap="round"/>
+  <circle cx="560" cy="124" r="18" fill="#bfdbfe"/>
+</svg>

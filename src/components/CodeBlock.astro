@@ -1,0 +1,16 @@
+---
+type Props = {
+  code: string;
+  language?: string;
+};
+
+const { code, language = "bash" } = Astro.props;
+---
+
+<figure class="my-6 overflow-hidden rounded-[20px] border border-[color:var(--border)] bg-slate-950 text-slate-100 shadow-soft">
+  <figcaption class="flex items-center justify-between border-b border-white/10 px-4 py-3 text-xs font-semibold text-slate-400">
+    <span>{language}</span>
+    <span translate="no">Alex Blog</span>
+  </figcaption>
+  <pre class="overflow-x-auto p-4 text-sm leading-7"><code>{code}</code></pre>
+</figure>

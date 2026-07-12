@@ -1,0 +1,126 @@
+---
+import ArticleCard from "@/components/ArticleCard.astro";
+import CodeBlock from "@/components/CodeBlock.astro";
+import Icon from "@/components/Icon.astro";
+import Toc from "@/components/Toc.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { articles } from "@/data/site";
+import { formatDate } from "@/data/format";
+
+const article = articles[2];
+const related = articles.slice(0, 3);
+---
+
+<BaseLayout title={article.title} description={article.excerpt}>
+  <article class="container-page pb-12 pt-16">
+    <div class="grid gap-10 xl:grid-cols-[minmax(0,760px)_260px] xl:justify-center">
+      <div class="min-w-0">
+        <header>
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm font-semibold text-[color:var(--muted)]">
+            <span>{article.category}</span>
+            <span class="h-1 w-1 rounded-full bg-[color:var(--border)]"></span>
+            <span class="inline-flex items-center gap-1"><Icon name="calendar" size={15} />发布于 {formatDate(article.date)}</span>
+            <span class="inline-flex items-center gap-1"><Icon name="clock" size={15} />{article.readTime}</span>
+          </div>
+          <h1 class="mt-5 text-balance text-4xl font-extrabold leading-tight text-[color:var(--text)] md:text-[48px]">{article.title}</h1>
+          <p class="mt-5 text-lg leading-9 text-[color:var(--muted)]">{article.excerpt}</p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            {article.tags.map((tag) => <a class="tag-pill" href={`/tags?tag=${encodeURIComponent(tag)}`}>{tag}</a>)}
+          </div>
+        </header>
+
+        <img
+          src={article.cover}
+          alt=""
+          width="720"
+          height="420"
+          fetchpriority="high"
+          class="mt-10 aspect-[16/9] w-full rounded-[24px] object-cover shadow-soft"
+        />
+
+        <div class="article-prose mt-10">
+          <p>
+            一个长期维护的个人博客，不应该只是页面漂亮。它需要让写作入口足够轻、阅读体验足够稳定，也要让未来的搜索、评论、统计和多语言能力可以自然接入。
+          </p>
+
+          <h2 id="why-astro">为什么选择 Astro</h2>
+          <p>
+            这个站点以内容为中心，首要目标是快速加载和稳定阅读。Astro 的 islands 架构让页面默认输出静态 HTML，只在必要时为搜索、主题切换等区域添加轻量脚本。
+          </p>
+          <blockquote>
+            博客的核心不是框架复杂度，而是你能否持续写作、持续整理，并让读者快速进入内容。
+          </blockquote>
+
+          <h2 id="structure">项目结构设计</h2>
+          <p>
+            初版把站点信息、文章、分类、标签和项目集中维护在数据模块中。页面只负责排版和消费数据，这样后续迁移到 MDX 内容集合时，不需要重写视觉组件。
+          </p>
+          <CodeBlock
+            language="bash"
+            code={`npm create astro@latest my-blog
+cd my-blog
+npm install
+npm run dev`}
+          />
+
+          <h2 id="typography">写作体验优化</h2>
+          <p>
+            正文宽度控制在约 760px，行高保持在 1.8 以上，代码块、引用、表格和图片都使用稳定的间距节奏。读者在长文章中需要的是清晰路径，而不是视觉噪声。
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>区域</th>
+                <th>设计策略</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>正文</td>
+                <td>限制宽度、提高行高、保持段落节奏</td>
+              </tr>
+              <tr>
+                <td>目录</td>
+                <td>桌面端常驻，移动端让正文优先</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2 id="deploy">静态部署策略</h2>
+          <p>
+            静态站点可以部署到 Vercel、Cloudflare Pages 或任意对象存储。构建产物简单，缓存策略清晰，也更容易把性能预算控制在合理范围内。
+          </p>
+
+          <h2 id="summary">总结</h2>
+          <p>
+            这个博客的第一版先把导航、文章、项目、搜索和关于页搭起来。它不是一次完成所有功能，而是为后续 RSS、Pagefind、Giscus 和 MDX 写作流打好底座。
+          </p>
+        </div>
+
+        <nav class="mt-12 grid gap-4 sm:grid-cols-2" aria-label="上一篇和下一篇">
+          <a href="/post" class="surface-card rounded-[20px] p-5 hover:border-[color:var(--primary)]">
+            <span class="text-xs font-bold text-[color:var(--muted)]">上一篇</span>
+            <span class="mt-2 block font-bold text-[color:var(--text)]">{articles[1].title}</span>
+          </a>
+          <a href="/post" class="surface-card rounded-[20px] p-5 text-right hover:border-[color:var(--primary)]">
+            <span class="text-xs font-bold text-[color:var(--muted)]">下一篇</span>
+            <span class="mt-2 block font-bold text-[color:var(--text)]">{articles[3].title}</span>
+          </a>
+        </nav>
+
+        <section class="mt-12">
+          <h2 class="section-title">相关文章</h2>
+          <div class="mt-6 grid gap-5 md:grid-cols-3">
+            {related.map((item) => <ArticleCard article={item} compact />)}
+          </div>
+        </section>
+
+        <section class="surface-card mt-12 rounded-[20px] p-6">
+          <h2 class="text-lg font-bold text-[color:var(--text)]">评论</h2>
+          <p class="mt-2 text-sm leading-7 text-[color:var(--muted)]">评论系统将在接入 Giscus 后启用。现在可以通过邮件或 GitHub 与我交流。</p>
+        </section>
+      </div>
+      <Toc />
+    </div>
+  </article>
+</BaseLayout>

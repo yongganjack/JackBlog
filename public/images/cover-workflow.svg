@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-label="Workflow article cover">
+  <rect width="720" height="420" rx="28" fill="#f8fafc"/>
+  <rect x="96" y="78" width="168" height="110" rx="24" fill="#dbeafe"/>
+  <rect x="276" y="156" width="168" height="110" rx="24" fill="#e0e7ff"/>
+  <rect x="456" y="234" width="168" height="110" rx="24" fill="#bfdbfe"/>
+  <path d="M264 132h70m110 78h70" stroke="#3b82f6" stroke-width="10" stroke-linecap="round"/>
+  <rect x="128" y="112" width="94" height="12" rx="6" fill="#2563eb"/>
+  <rect x="308" y="190" width="86" height="12" rx="6" fill="#4f46e5"/>
+  <rect x="488" y="268" width="92" height="12" rx="6" fill="#0284c7"/>
+</svg>

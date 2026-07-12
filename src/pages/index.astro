@@ -1,0 +1,123 @@
+---
+import ArticleCard from "@/components/ArticleCard.astro";
+import Icon from "@/components/Icon.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import TagPill from "@/components/TagPill.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { articles, projects, siteConfig, tags } from "@/data/site";
+
+const featured = articles.filter((article) => article.featured).slice(0, 3);
+const latest = articles.slice(3, 9);
+---
+
+<BaseLayout>
+  <section class="container-page grid gap-12 pb-12 pt-14 lg:grid-cols-[1fr_0.92fr] lg:items-center lg:pb-20 lg:pt-20">
+    <div>
+      <h1 class="max-w-2xl text-5xl font-extrabold leading-[1.08] tracking-normal text-[color:var(--text)] md:text-[56px]">
+        <span class="block">记录技术，</span>
+        <span class="block">分享思考，</span>
+        <span class="block">持续创造。</span>
+      </h1>
+      <p class="mt-6 max-w-xl text-lg leading-9 text-[color:var(--body)]">{siteConfig.role}</p>
+      <div class="mt-9 flex flex-wrap gap-3">
+        <a href="/archive" class="button-primary">
+          开始阅读
+          <Icon name="arrow-right" />
+        </a>
+        <a href="/projects" class="button-secondary">查看项目</a>
+      </div>
+      <div class="mt-9 flex flex-wrap gap-4 text-sm font-semibold text-[color:var(--muted)]">
+        <span>AI 工程</span>
+        <span>·</span>
+        <span>全栈开发</span>
+        <span>·</span>
+        <span>独立产品</span>
+        <span>·</span>
+        <span>开源实践</span>
+      </div>
+    </div>
+    <div class="relative">
+      <div class="absolute inset-8 rounded-full bg-blue-200/40 blur-3xl"></div>
+      <img
+        src="/images/hero-developer.svg"
+        alt="开发者在笔记本电脑前写作和编程的插画"
+        width="900"
+        height="720"
+        fetchpriority="high"
+        class="relative w-full rounded-[32px] shadow-lift"
+      />
+    </div>
+  </section>
+
+  <section class="container-page py-12">
+    <div class="mb-7 flex items-end justify-between gap-6">
+      <div>
+        <h2 class="section-title">精选文章</h2>
+        <p class="section-kicker mt-2">更适合从这里开始了解这个博客的写作方向。</p>
+      </div>
+      <a href="/archive" class="hidden text-sm font-bold text-[color:var(--primary)] sm:inline-flex">查看更多 →</a>
+    </div>
+    <div class="grid gap-6 lg:grid-cols-3">
+      {featured.map((article) => <ArticleCard article={article} />)}
+    </div>
+  </section>
+
+  <section class="container-page py-12">
+    <div class="mb-7 flex items-end justify-between gap-6">
+      <div>
+        <h2 class="section-title">最新文章</h2>
+        <p class="section-kicker mt-2">持续记录技术实践、产品思考和学习笔记。</p>
+      </div>
+      <a href="/archive" class="hidden text-sm font-bold text-[color:var(--primary)] sm:inline-flex">查看全部 →</a>
+    </div>
+    <div class="grid gap-5 md:grid-cols-2">
+      {latest.map((article) => <ArticleCard article={article} compact horizontal />)}
+    </div>
+  </section>
+
+  <section class="container-page py-12">
+    <div class="mb-7">
+      <h2 class="section-title">热门标签</h2>
+      <p class="section-kicker mt-2">按技术主题和写作场景快速进入内容。</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      {tags.slice(0, 14).map(([tag, count]) => <TagPill label={tag} count={count} />)}
+    </div>
+  </section>
+
+  <section class="container-page py-12">
+    <div class="mb-7 flex items-end justify-between gap-6">
+      <div>
+        <h2 class="section-title">精选项目</h2>
+        <p class="section-kicker mt-2">把学习、实验和产品想法沉淀为可以打开的作品。</p>
+      </div>
+      <a href="/projects" class="hidden text-sm font-bold text-[color:var(--primary)] sm:inline-flex">查看项目 →</a>
+    </div>
+    <div class="grid gap-6 md:grid-cols-3">
+      {projects.slice(0, 3).map((project) => <ProjectCard project={project} />)}
+    </div>
+  </section>
+
+  <section class="container-page py-12">
+    <div class="surface-card grid gap-6 rounded-[28px] p-6 md:grid-cols-[1fr_auto] md:items-center md:p-8">
+      <div>
+        <h2 class="text-2xl font-bold text-[color:var(--text)]">订阅我的最新文章</h2>
+        <p class="mt-2 text-sm leading-7 text-[color:var(--muted)]">每月分享 AI、开发、产品和个人成长相关内容。</p>
+      </div>
+      <form class="flex flex-col gap-3 sm:flex-row" action="/search">
+        <label class="sr-only" for="home-email">邮箱地址</label>
+        <input
+          id="home-email"
+          name="email"
+          type="email"
+          inputmode="email"
+          autocomplete="email"
+          spellcheck="false"
+          placeholder="alex@example.com…"
+          class="min-h-11 min-w-0 rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 text-sm text-[color:var(--text)]"
+        />
+        <button class="button-primary min-h-11 px-5" type="submit">立即订阅</button>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
