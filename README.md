@@ -148,7 +148,7 @@ PersonalBlog/
 │   ├── DEPLOYMENT.md                 #   部署指南
 │   └── ROADMAP.md                    #   路线图
 │
-├── temp/                             # 原始设计参考资料
+
 ├── astro.config.mjs                  # Astro 配置
 ├── tailwind.config.mjs               # Tailwind 配置（字体、阴影扩展）
 ├── tsconfig.json                     # TypeScript 配置（路径别名 @/）
