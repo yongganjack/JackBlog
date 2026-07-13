@@ -82,14 +82,17 @@ const getLinkHost = (url: string) => new URL(url).hostname.replace(/^www\./, "")
 
       <section class="mt-10">
         <h2 class="section-title">经历时间线</h2>
-        <div class="mt-6 grid gap-4">
+        <div class="timeline-list mt-6">
           {
-            timeline.map((item) => (
-              <article class="surface-card grid gap-3 rounded-[20px] p-5 sm:grid-cols-[88px_1fr]">
-                <div class="font-mono text-sm font-bold tabular-nums text-[color:var(--primary)]">{item.year}</div>
-                <div>
-                  <h3 class="font-bold text-[color:var(--text)]">{item.title}</h3>
-                  <p class="mt-2 text-sm leading-7 text-[color:var(--muted)]">{item.body}</p>
+            timeline.map((item, index) => (
+              <article class={`timeline-item ${index % 2 === 0 ? "timeline-item-left" : "timeline-item-right"}`}>
+                <div class="timeline-node" aria-hidden="true"></div>
+                <div class="surface-card timeline-card rounded-[20px] p-5">
+                  <div class="font-mono text-sm font-bold tabular-nums text-[color:var(--primary)]">{item.year}</div>
+                  <div class="mt-3">
+                    <h3 class="font-bold text-[color:var(--text)]">{item.title}</h3>
+                    <p class="mt-2 text-sm leading-7 text-[color:var(--muted)]">{item.body}</p>
+                  </div>
                 </div>
               </article>
             ))
@@ -99,3 +102,87 @@ const getLinkHost = (url: string) => new URL(url).hostname.replace(/^www\./, "")
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .timeline-list {
+    position: relative;
+    display: grid;
+    gap: 1.5rem;
+    padding-left: 2rem;
+  }
+
+  .timeline-list::before {
+    position: absolute;
+    left: 0.5rem;
+    top: 0.75rem;
+    bottom: 0.75rem;
+    width: 2px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--primary) 38%, var(--border));
+    content: "";
+  }
+
+  .timeline-item {
+    position: relative;
+  }
+
+  .timeline-node {
+    position: absolute;
+    left: -1.875rem;
+    top: 1.35rem;
+    z-index: 1;
+    width: 0.75rem;
+    height: 0.75rem;
+    border: 2px solid var(--surface);
+    border-radius: 999px;
+    background: var(--primary);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 16%, transparent);
+  }
+
+  .timeline-card {
+    position: relative;
+  }
+
+  @media (min-width: 640px) {
+    .timeline-list {
+      gap: 0;
+      padding-left: 0;
+    }
+
+    .timeline-list::before {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      min-height: 8.5rem;
+    }
+
+    .timeline-item + .timeline-item {
+      margin-top: -0.5rem;
+    }
+
+    .timeline-node {
+      left: 50%;
+      top: 1.65rem;
+      transform: translateX(-50%);
+    }
+
+    .timeline-card {
+      width: calc(100% - 2.5rem);
+    }
+
+    .timeline-item-left .timeline-card {
+      grid-column: 1;
+      justify-self: start;
+      text-align: right;
+    }
+
+    .timeline-item-right .timeline-card {
+      grid-column: 2;
+      justify-self: end;
+    }
+  }
+</style>

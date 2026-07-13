@@ -118,7 +118,7 @@ export const friendLinks: FriendLink[] = [
 ];
 
 export const timeline = [
-  { year: "2026", title: "AI 工程师", body: "专注智能应用、RAG 系统与个人生产力工具。" },
-  { year: "2024", title: "独立开发者", body: "开始持续发布小产品，把工程能力转化为真实作品。" },
-  { year: "2021", title: "全栈开发者", body: "参与前后端一体化项目，从用户体验到服务稳定性全链路打磨。" }
+  { year: "2026.9-至今", title: "重庆邮电大学（在读）", body: "软件工程（专硕）" },
+  { year: "2022.9-2026.6", title: "湘潭理工学院", body: "数据科学与大数据技术" },
+  
 ];
