@@ -1,14 +1,16 @@
 ---
 import ProjectCard from "@/components/ProjectCard.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { projects } from "@/data/site";
+import { getProjects } from "@/data/projects";
+
+const projects = await getProjects();
 ---
 
 <BaseLayout title="项目">
   <section class="container-page pb-12 pt-16">
     <div class="max-w-2xl">
       <h1 class="text-balance text-4xl font-extrabold leading-tight text-[color:var(--text)] md:text-[40px]">我的项目</h1>
-      <p class="mt-4 text-base leading-8 text-[color:var(--muted)]">一些个人实践、产品原型和开源实验，用来沉淀技术判断和产品直觉。</p>
+      <p class="mt-4 text-base leading-8 text-[color:var(--muted)]">这里收录了我在学习过程中的实践项目，以及这个博客站点的构建记录。</p>
     </div>
     <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {projects.map((project) => <ProjectCard project={project} />)}

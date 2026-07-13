@@ -1,0 +1,60 @@
+---
+import { render, type CollectionEntry } from "astro:content";
+import Icon from "@/components/Icon.astro";
+import Toc from "@/components/Toc.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getProjectEntries, type Project } from "@/data/projects";
+
+type Props = {
+  entry: CollectionEntry<"project">;
+  project: Project;
+};
+
+export async function getStaticPaths() {
+  const projectEntries = await getProjectEntries();
+
+  return projectEntries.map(({ entry, project }) => ({
+    params: { slug: project.slug },
+    props: { entry, project }
+  }));
+}
+
+const { entry, project } = Astro.props;
+const { Content, headings } = await render(entry);
+const tocItems = headings
+  .filter((heading) => heading.depth === 2)
+  .map((heading) => ({ href: `#${heading.slug}`, label: heading.text }));
+---
+
+<BaseLayout title={project.name} description={project.description}>
+  <article class="article-shell pb-12 pt-16" style="--article-width: 960px">
+    <div class="grid gap-10 xl:grid-cols-[minmax(0,var(--article-width,760px))_260px] xl:justify-center">
+      <div class="min-w-0">
+        <a href="/projects" class="inline-flex items-center gap-1.5 text-sm font-bold text-[color:var(--primary)]">
+          <Icon name="chevron-left" size={16} />
+          返回项目
+        </a>
+
+        <header class="mt-6">
+          <div class="flex flex-wrap gap-2">
+            {project.stack.map((item) => <span class="tag-pill">{item}</span>)}
+          </div>
+          <h1 class="mt-5 text-balance text-4xl font-extrabold leading-tight text-[color:var(--text)] md:text-[48px]">{project.name}</h1>
+          <p class="mt-5 text-lg leading-9 text-[color:var(--muted)]">{project.description}</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href={project.github} class="button-secondary">
+              <Icon name="github" size={16} />
+              GitHub
+            </a>
+          </div>
+        </header>
+
+        <div class="article-prose project-prose mt-10">
+          <Content />
+        </div>
+      </div>
+
+      <Toc items={tocItems} />
+    </div>
+  </article>
+</BaseLayout>

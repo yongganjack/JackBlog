@@ -5,10 +5,12 @@ import ProjectCard from "@/components/ProjectCard.astro";
 import TagPill from "@/components/TagPill.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getArticles, getTags } from "@/data/articles";
-import { projects, siteConfig } from "@/data/site";
+import { getProjects } from "@/data/projects";
+import { siteConfig } from "@/data/site";
 
 const articles = await getArticles();
 const tags = await getTags(articles);
+const projects = await getProjects();
 const featured = articles.filter((article) => article.featured).slice(0, 3);
 const latest = articles.slice(3, 9);
 ---
