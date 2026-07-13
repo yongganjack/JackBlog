@@ -1,4 +1,8 @@
 ---
+# src/content/blog/research-tools.md
+featured: true
+featuredOrder: 1
+# 科研工具
 title: "科研工具"
 excerpt: "记录计算机科研、AI 工具、文献阅读和大模型应用学习过程中用到的资源。"
 date: "2026-07-13"

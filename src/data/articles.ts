@@ -11,6 +11,7 @@ export type Article = {
   tags: string[];
   cover: string;
   featured: boolean;
+  featuredOrder?: number;
 };
 
 export type Category = {
@@ -70,11 +71,13 @@ export const toArticle = (entry: CollectionEntry<"blog">): Article => ({
   category: entry.data.category ?? "随笔",
   tags: entry.data.tags,
   cover: entry.data.cover ?? "/images/cover-blog.svg",
-  featured: entry.data.featured
+  featured: entry.data.featured,
+  featuredOrder: entry.data.featuredOrder
 });
 
-const byNewest = (articleA: Article, articleB: Article) =>
-  new Date(articleB.date).getTime() - new Date(articleA.date).getTime();
+const newestTimestamp = (article: Article) => new Date(article.updated ?? article.date).getTime();
+
+const byNewest = (articleA: Article, articleB: Article) => newestTimestamp(articleB) - newestTimestamp(articleA);
 
 const countBy = (items: string[]) =>
   items.reduce<Record<string, number>>((counts, item) => {

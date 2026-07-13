@@ -1,5 +1,6 @@
 ---
 import { render, type CollectionEntry } from "astro:content";
+import CodeCopyEnhancer from "@/components/CodeCopyEnhancer.astro";
 import Icon from "@/components/Icon.astro";
 import Toc from "@/components/Toc.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
@@ -58,3 +59,5 @@ const tocItems = headings
     </div>
   </article>
 </BaseLayout>
+
+<CodeCopyEnhancer />

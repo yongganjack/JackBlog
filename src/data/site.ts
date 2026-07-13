@@ -7,6 +7,12 @@ export type Project = {
   image: string;
 };
 
+export type FriendLink = {
+  name: string;
+  description: string;
+  url: string;
+};
+
 export type SiteConfig = {
   name: string;
   description: string;
@@ -26,8 +32,8 @@ export const siteConfig: SiteConfig = {
   author: "Alex",
   role: "AI 工程师｜全栈开发者｜独立开发者｜开源爱好者",
   socials: {
-    github: "https://github.com",
-    email: "mailto:alex@example.com",
+    github: "https://github.com/yongganjack",
+    email: "jack1824871823@163.com",
     rss: "/rss.xml",
     x: "https://x.com"
   }
@@ -36,6 +42,7 @@ export const siteConfig: SiteConfig = {
 export const navItems = [
   { label: "首页", href: "/" },
   { label: "文章", href: "/archive" },
+  { label: "精选", href: "/featured" },
   { label: "标签", href: "/tags" },
   { label: "项目", href: "/projects" },
   { label: "关于", href: "/about" }
@@ -89,6 +96,24 @@ export const projects: Project[] = [
     github: "https://github.com",
     demo: "#",
     image: "/images/project-devtools.svg"
+  }
+];
+
+export const friendLinks: FriendLink[] = [
+  {
+    name: "伙伴小站",
+    description: "记录技术学习、项目实践和日常思考的个人博客。",
+    url: "https://example.com"
+  },
+  {
+    name: "Code Notes",
+    description: "分享全栈开发、工具链和效率工作流的技术笔记。",
+    url: "https://example.dev"
+  },
+  {
+    name: "AI Lab",
+    description: "关注大模型应用、Agent 实验和科研工具探索。",
+    url: "https://example.org"
   }
 ];
 

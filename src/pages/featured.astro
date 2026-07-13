@@ -1,0 +1,235 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getArticles } from "@/data/articles";
+import { formatDate } from "@/data/format";
+
+const articles = await getArticles();
+const articleOptions = articles.map((article) => ({
+  title: article.title,
+  slug: article.slug,
+  excerpt: article.excerpt,
+  date: article.date,
+  category: article.category,
+  cover: article.cover,
+  featured: article.featured,
+  featuredOrder: article.featuredOrder
+}));
+
+const initiallySelected = articleOptions
+  .filter((article) => article.featured)
+  .sort(
+    (articleA, articleB) =>
+      (articleA.featuredOrder ?? Number.POSITIVE_INFINITY) -
+      (articleB.featuredOrder ?? Number.POSITIVE_INFINITY)
+  )
+  .slice(0, 3);
+---
+
+<BaseLayout title="精选控制台" description="可视化选择首页精选文章并生成 frontmatter 配置">
+  <section class="container-page pb-12 pt-16" data-featured-control>
+    <div class="max-w-3xl">
+      <p class="text-sm font-bold text-[color:var(--primary)]">首页精选</p>
+      <h1 class="mt-3 text-balance text-4xl font-extrabold leading-tight text-[color:var(--text)] md:text-[44px]">
+        可视化选择精选文章
+      </h1>
+      <p class="mt-4 text-base leading-8 text-[color:var(--muted)]">
+        选择最多 3 篇文章，调整顺序后，把生成的配置写回对应 Markdown 文件的 frontmatter。
+      </p>
+    </div>
+
+    <div class="mt-8 grid gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
+      <section class="surface-card rounded-[20px] p-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-lg font-bold text-[color:var(--text)]">文章列表</h2>
+            <p class="mt-1 text-sm text-[color:var(--muted)]">点击按钮加入或移除首页精选。</p>
+          </div>
+          <span class="rounded-full bg-[color:var(--surface-soft)] px-3 py-1 text-xs font-bold text-[color:var(--muted)]" data-selected-count>
+            0 / 3
+          </span>
+        </div>
+
+        <div class="mt-5 grid gap-3">
+          {
+            articleOptions.map((article) => (
+              <article
+                class="grid gap-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-3 sm:grid-cols-[120px_1fr_auto] sm:items-center"
+                data-article-option
+                data-slug={article.slug}
+              >
+                <img
+                  src={article.cover}
+                  alt=""
+                  width="240"
+                  height="150"
+                  loading="lazy"
+                  class="aspect-[8/5] w-full rounded-xl object-cover sm:w-[120px]"
+                />
+                <div class="min-w-0">
+                  <div class="flex flex-wrap items-center gap-2 text-xs font-semibold text-[color:var(--muted)]">
+                    <span>{article.category}</span>
+                    <span>{formatDate(article.date)}</span>
+                  </div>
+                  <h3 class="mt-2 text-base font-bold leading-snug text-[color:var(--text)]">{article.title}</h3>
+                  <p class="mt-1 line-clamp-2 text-sm leading-6 text-[color:var(--muted)]">{article.excerpt}</p>
+                </div>
+                <button
+                  type="button"
+                  class="min-h-10 rounded-xl border border-[color:var(--border)] px-4 text-sm font-bold text-[color:var(--primary)] hover:bg-[color:var(--surface-soft)] disabled:cursor-not-allowed disabled:opacity-45"
+                  data-toggle-featured
+                  data-slug={article.slug}
+                >
+                  加入精选
+                </button>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <aside class="grid h-max gap-5">
+        <section class="surface-card rounded-[20px] p-5">
+          <h2 class="text-lg font-bold text-[color:var(--text)]">首页预览</h2>
+          <p class="mt-1 text-sm text-[color:var(--muted)]">顺序会对应 `featuredOrder`。</p>
+          <div class="mt-5 grid gap-3" data-featured-preview></div>
+        </section>
+
+        <section class="surface-card rounded-[20px] p-5">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <h2 class="text-lg font-bold text-[color:var(--text)]">生成配置</h2>
+              <p class="mt-1 text-sm text-[color:var(--muted)]">复制到对应文章顶部。</p>
+            </div>
+            <button
+              type="button"
+              class="min-h-10 rounded-xl border border-[color:var(--border)] px-3 text-sm font-bold text-[color:var(--text)] hover:bg-[color:var(--surface-soft)]"
+              data-copy-config
+            >
+              复制
+            </button>
+          </div>
+          <pre class="mt-4 max-h-[360px] overflow-auto rounded-2xl bg-slate-950 p-4 text-xs leading-6 text-slate-100"><code data-config-output></code></pre>
+          <p class="mt-3 hidden text-sm font-semibold text-[color:var(--primary)]" data-copy-status>已复制</p>
+        </section>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline define:vars={{ articleOptions, initiallySelected }}>
+  const articles = articleOptions;
+  const articleMap = new Map(articles.map((article) => [article.slug, article]));
+  let selected = initiallySelected.map((article) => article.slug);
+
+  const selectedCount = document.querySelector("[data-selected-count]");
+  const preview = document.querySelector("[data-featured-preview]");
+  const configOutput = document.querySelector("[data-config-output]");
+  const copyButton = document.querySelector("[data-copy-config]");
+  const copyStatus = document.querySelector("[data-copy-status]");
+
+  const escapeHtml = (value) =>
+    String(value).replace(/[&<>"']/g, (character) => {
+      const entities = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+      return entities[character];
+    });
+
+  const buildConfig = () => {
+    if (!selected.length) {
+      return "# 选择文章后会在这里生成配置";
+    }
+
+    return selected
+      .map((slug, index) => {
+        const article = articleMap.get(slug);
+        return `# src/content/blog/${slug}.md\nfeatured: true\nfeaturedOrder: ${index + 1}\n# ${article.title}`;
+      })
+      .join("\n\n");
+  };
+
+  const renderPreview = () => {
+    if (!preview) return;
+
+    if (!selected.length) {
+      preview.innerHTML = `<div class="rounded-2xl border border-dashed border-[color:var(--border)] p-5 text-sm leading-7 text-[color:var(--muted)]">还没有选择精选文章。</div>`;
+      return;
+    }
+
+    preview.innerHTML = selected
+      .map((slug, index) => {
+        const article = articleMap.get(slug);
+        return `
+          <article class="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-3">
+            <div class="flex gap-3">
+              <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[color:var(--surface-soft)] text-sm font-extrabold text-[color:var(--primary)]">${index + 1}</span>
+              <div class="min-w-0 flex-1">
+                <h3 class="text-sm font-bold leading-6 text-[color:var(--text)]">${escapeHtml(article.title)}</h3>
+                <p class="mt-1 line-clamp-2 text-xs leading-5 text-[color:var(--muted)]">${escapeHtml(article.excerpt)}</p>
+              </div>
+            </div>
+            <div class="mt-3 flex gap-2">
+              <button type="button" class="rounded-lg border border-[color:var(--border)] px-3 py-1 text-xs font-bold text-[color:var(--text)] disabled:opacity-40" data-move-featured="${slug}" data-direction="-1" ${index === 0 ? "disabled" : ""}>上移</button>
+              <button type="button" class="rounded-lg border border-[color:var(--border)] px-3 py-1 text-xs font-bold text-[color:var(--text)] disabled:opacity-40" data-move-featured="${slug}" data-direction="1" ${index === selected.length - 1 ? "disabled" : ""}>下移</button>
+            </div>
+          </article>
+        `;
+      })
+      .join("");
+  };
+
+  const render = () => {
+    const selectedSet = new Set(selected);
+    if (selectedCount) selectedCount.textContent = `${selected.length} / 3`;
+    if (configOutput) configOutput.textContent = buildConfig();
+
+    document.querySelectorAll("[data-article-option]").forEach((option) => {
+      const slug = option.dataset.slug;
+      const isSelected = selectedSet.has(slug);
+      option.classList.toggle("border-[color:var(--primary)]", isSelected);
+      option.classList.toggle("bg-[color:var(--surface-soft)]", isSelected);
+    });
+
+    document.querySelectorAll("[data-toggle-featured]").forEach((button) => {
+      const slug = button.dataset.slug;
+      const isSelected = selectedSet.has(slug);
+      button.textContent = isSelected ? "移除精选" : "加入精选";
+      button.disabled = !isSelected && selected.length >= 3;
+      button.setAttribute("aria-pressed", String(isSelected));
+    });
+
+    renderPreview();
+  };
+
+  document.addEventListener("click", (event) => {
+    const toggleButton = event.target.closest("[data-toggle-featured]");
+    if (toggleButton) {
+      const slug = toggleButton.dataset.slug;
+      const isSelected = selected.includes(slug);
+      selected = isSelected ? selected.filter((item) => item !== slug) : [...selected, slug].slice(0, 3);
+      render();
+      return;
+    }
+
+    const moveButton = event.target.closest("[data-move-featured]");
+    if (moveButton) {
+      const slug = moveButton.dataset.moveFeatured;
+      const direction = Number(moveButton.dataset.direction);
+      const currentIndex = selected.indexOf(slug);
+      const nextIndex = currentIndex + direction;
+      if (currentIndex >= 0 && nextIndex >= 0 && nextIndex < selected.length) {
+        const nextSelected = [...selected];
+        [nextSelected[currentIndex], nextSelected[nextIndex]] = [nextSelected[nextIndex], nextSelected[currentIndex]];
+        selected = nextSelected;
+        render();
+      }
+    }
+  });
+
+  copyButton?.addEventListener("click", async () => {
+    if (!configOutput?.textContent) return;
+    await navigator.clipboard.writeText(configOutput.textContent);
+    copyStatus?.classList.remove("hidden");
+    window.setTimeout(() => copyStatus?.classList.add("hidden"), 1600);
+  });
+
+  render();
+</script>

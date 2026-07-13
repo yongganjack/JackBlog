@@ -7,7 +7,6 @@ readTime: "8 分钟阅读"
 category: "AI"
 tags: ["AI", "LLM", "RAG"]
 cover: "/images/cover-ai.svg"
-featured: true
 ---
 
 ## 从问题开始

@@ -1,0 +1,83 @@
+<script is:inline>
+  (() => {
+    const resetDelay = 1600;
+
+    const copyWithFallback = async (text) => {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.inset = "0 auto auto 0";
+      textarea.style.opacity = "0";
+      document.body.append(textarea);
+      textarea.select();
+
+      try {
+        const copied = document.execCommand("copy");
+        if (!copied) throw new Error("Copy command was rejected.");
+      } finally {
+        textarea.remove();
+      }
+    };
+
+    const setButtonState = (button, state) => {
+      const labels = {
+        idle: "复制",
+        success: "已复制",
+        error: "复制失败"
+      };
+
+      button.textContent = labels[state];
+      button.dataset.copyState = state;
+    };
+
+    const enhanceCodeBlocks = () => {
+      document.querySelectorAll(".article-prose pre").forEach((pre) => {
+        if (pre.dataset.codeCopyEnhanced === "true") return;
+
+        const code = pre.querySelector("code");
+        if (!code) return;
+
+        const frame = document.createElement("div");
+        frame.className = "code-copy-frame";
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "code-copy-button";
+        button.dataset.codeCopyButton = "";
+        button.setAttribute("aria-label", "复制代码块");
+        setButtonState(button, "idle");
+
+        pre.dataset.codeCopyEnhanced = "true";
+        pre.before(frame);
+        frame.append(button, pre);
+
+        let resetTimer;
+        button.addEventListener("click", async () => {
+          window.clearTimeout(resetTimer);
+
+          try {
+            await copyWithFallback(code.textContent ?? "");
+            setButtonState(button, "success");
+          } catch {
+            setButtonState(button, "error");
+          }
+
+          resetTimer = window.setTimeout(() => setButtonState(button, "idle"), resetDelay);
+        });
+      });
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", enhanceCodeBlocks, { once: true });
+      return;
+    }
+
+    enhanceCodeBlocks();
+  })();
+</script>

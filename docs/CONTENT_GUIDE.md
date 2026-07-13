@@ -44,6 +44,7 @@ category: "AI"
 tags: ["AI", "LLM"]
 cover: "/images/cover-ai.svg"
 featured: true
+featuredOrder: 1
 ---
 
 正文从这里开始。
@@ -59,6 +60,9 @@ featured: true
 - `tags`：标签。
 - `cover`：封面图路径。
 - `featured`：是否在首页精选区域展示。
+- `featuredOrder`：首页精选文章的手动排序，数字越小越靠前；只对 `featured: true` 的文章生效。
+
+也可以打开 `/featured` 使用可视化控制台选择首页精选文章。控制台会生成需要写回 Markdown frontmatter 的 `featured` 和 `featuredOrder` 配置。
 
 分类和标签数量会根据 `src/content/blog/` 里的 Markdown 自动统计，不需要手动维护。
 
