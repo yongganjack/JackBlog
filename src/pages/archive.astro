@@ -1,9 +1,14 @@
 ---
 import ArticleCard from "@/components/ArticleCard.astro";
-import Pagination from "@/components/Pagination.astro";
 import TagPill from "@/components/TagPill.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { articles, categories, tags } from "@/data/site";
+import { getArticles, getCategories, getTags } from "@/data/articles";
+
+const articles = await getArticles();
+const categories = await getCategories(articles);
+const tags = await getTags(articles);
+const categoryNames = categories.map((category) => category.name);
+const tagNames = tags.map(([tag]) => tag);
 ---
 
 <BaseLayout title="文章">
@@ -17,8 +22,13 @@ import { articles, categories, tags } from "@/data/site";
       <aside class="surface-card h-max rounded-[20px] p-5">
         <h2 class="text-sm font-bold text-[color:var(--text)]">分类筛选</h2>
         <div class="mt-4 grid gap-2">
-          {categories.slice(0, 6).map((category) => (
-            <a href={`/archive?category=${encodeURIComponent(category.name)}`} class="flex items-center justify-between rounded-xl px-3 py-2 text-sm font-semibold text-[color:var(--body)] hover:bg-[color:var(--surface-soft)] hover:text-[color:var(--primary)]">
+          {categories.map((category) => (
+            <a
+              href={`/archive?category=${encodeURIComponent(category.name)}`}
+              data-category-link
+              data-category-name={category.name}
+              class="flex items-center justify-between rounded-xl px-3 py-2 text-sm font-semibold text-[color:var(--body)] hover:bg-[color:var(--surface-soft)] hover:text-[color:var(--primary)]"
+            >
               <span>{category.name}</span>
               <span class="font-mono text-xs tabular-nums text-[color:var(--muted)]">{category.count}</span>
             </a>
@@ -34,10 +44,47 @@ import { articles, categories, tags } from "@/data/site";
           </div>
         </div>
         <div class="grid gap-5">
-          {articles.map((article) => <ArticleCard article={article} horizontal />)}
+          {articles.map((article) => (
+            <div data-article-card data-article-category={article.category} data-article-tags={JSON.stringify(article.tags)}>
+              <ArticleCard article={article} horizontal />
+            </div>
+          ))}
         </div>
-        <Pagination />
       </div>
     </div>
   </section>
 </BaseLayout>
+
+<script is:inline define:vars={{ categoryNames, tagNames }}>
+  const params = new URLSearchParams(window.location.search);
+  const selectedCategory = params.get("category");
+  const selectedTag = params.get("tag");
+  const activeCategory = categoryNames.includes(selectedCategory) ? selectedCategory : "";
+  const activeTag = tagNames.includes(selectedTag) ? selectedTag : "";
+
+  document.querySelectorAll("[data-category-link]").forEach((link) => {
+    const isActive = link.dataset.categoryName === activeCategory;
+    link.classList.toggle("bg-[color:var(--surface-soft)]", isActive);
+    link.classList.toggle("text-[color:var(--primary)]", isActive);
+    link.classList.toggle("text-[color:var(--body)]", !isActive);
+
+    if (isActive) {
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+
+  document.querySelectorAll("[data-article-card]").forEach((card) => {
+    let articleTags = [];
+    try {
+      articleTags = JSON.parse(card.dataset.articleTags || "[]");
+    } catch {
+      articleTags = [];
+    }
+
+    const categoryMismatch = Boolean(activeCategory) && card.dataset.articleCategory !== activeCategory;
+    const tagMismatch = Boolean(activeTag) && !articleTags.includes(activeTag);
+    card.hidden = categoryMismatch || tagMismatch;
+  });
+</script>

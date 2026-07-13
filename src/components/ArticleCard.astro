@@ -1,5 +1,5 @@
 ---
-import type { Article } from "@/data/site";
+import type { Article } from "@/data/articles";
 import { formatDate } from "@/data/format";
 import Icon from "./Icon.astro";
 import TagPill from "./TagPill.astro";
@@ -19,7 +19,7 @@ const { article, compact = false, horizontal = false } = Astro.props;
     horizontal ? "grid gap-5 p-3 sm:grid-cols-[220px_1fr]" : "flex h-full flex-col"
   ]}
 >
-  <a href="/post" class:list={[horizontal ? "block" : "block", "overflow-hidden rounded-2xl"]} aria-label={`阅读文章：${article.title}`}>
+  <a href={`/post/${article.slug}`} class:list={[horizontal ? "block" : "block", "overflow-hidden rounded-2xl"]} aria-label={`阅读文章：${article.title}`}>
     <img
       src={article.cover}
       alt=""
@@ -41,7 +41,7 @@ const { article, compact = false, horizontal = false } = Astro.props;
       <span class="inline-flex items-center gap-1"><Icon name="clock" size={14} />{article.readTime}</span>
     </div>
     <h3 class:list={["mt-3 text-pretty font-bold leading-snug text-[color:var(--text)] group-hover:text-[color:var(--primary)]", compact ? "text-base" : "text-xl"]}>
-      <a href="/post">{article.title}</a>
+      <a href={`/post/${article.slug}`}>{article.title}</a>
     </h3>
     <p class:list={["mt-3 leading-7 text-[color:var(--muted)]", compact ? "line-clamp-2 text-sm" : "text-sm"]}>{article.excerpt}</p>
     {

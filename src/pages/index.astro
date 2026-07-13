@@ -4,8 +4,11 @@ import Icon from "@/components/Icon.astro";
 import ProjectCard from "@/components/ProjectCard.astro";
 import TagPill from "@/components/TagPill.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { articles, projects, siteConfig, tags } from "@/data/site";
+import { getArticles, getTags } from "@/data/articles";
+import { projects, siteConfig } from "@/data/site";
 
+const articles = await getArticles();
+const tags = await getTags(articles);
 const featured = articles.filter((article) => article.featured).slice(0, 3);
 const latest = articles.slice(3, 9);
 ---
@@ -14,9 +17,9 @@ const latest = articles.slice(3, 9);
   <section class="container-page grid gap-12 pb-12 pt-14 lg:grid-cols-[1fr_0.92fr] lg:items-center lg:pb-20 lg:pt-20">
     <div>
       <h1 class="max-w-2xl text-5xl font-extrabold leading-[1.08] tracking-normal text-[color:var(--text)] md:text-[56px]">
-        <span class="block">记录技术，</span>
-        <span class="block">分享思考，</span>
-        <span class="block">持续创造。</span>
+        <span class="block">记录技术</span>
+        <span class="block">分享思考</span>
+        <span class="block">持续创造</span>
       </h1>
       <p class="mt-6 max-w-xl text-lg leading-9 text-[color:var(--body)]">{siteConfig.role}</p>
       <div class="mt-9 flex flex-wrap gap-3">

@@ -1,7 +1,11 @@
 ---
 import TagPill from "@/components/TagPill.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { categories, tags } from "@/data/site";
+import { getArticles, getCategories, getTags } from "@/data/articles";
+
+const articles = await getArticles();
+const categories = await getCategories(articles);
+const tags = await getTags(articles);
 ---
 
 <BaseLayout title="分类与标签">

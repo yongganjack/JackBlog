@@ -1,6 +1,10 @@
 ---
-import { articles, categories, tags } from "@/data/site";
+import { getArticles, getCategories, getTags } from "@/data/articles";
 import Icon from "./Icon.astro";
+
+const articles = await getArticles();
+const categories = await getCategories(articles);
+const tags = await getTags(articles);
 ---
 
 <section class="container-page py-16">
@@ -26,7 +30,7 @@ import Icon from "./Icon.astro";
         {
           articles.slice(0, 6).map((article) => (
             <a
-              href="/post"
+              href={`/post/${article.slug}`}
               class="search-item grid gap-1 rounded-2xl px-4 py-3 hover:bg-[color:var(--surface-soft)]"
               data-search-item={`${article.title} ${article.excerpt} ${article.category} ${article.tags.join(" ")}`}
             >
@@ -38,7 +42,7 @@ import Icon from "./Icon.astro";
         {
           categories.slice(0, 4).map((category) => (
             <a
-              href={`/tags?category=${encodeURIComponent(category.name)}`}
+              href={`/archive?category=${encodeURIComponent(category.name)}`}
               class="search-item grid gap-1 rounded-2xl px-4 py-3 hover:bg-[color:var(--surface-soft)]"
               data-search-item={`${category.name} ${category.description}`}
             >
@@ -50,7 +54,7 @@ import Icon from "./Icon.astro";
         {
           tags.slice(0, 6).map(([tag, count]) => (
             <a
-              href={`/tags?tag=${encodeURIComponent(tag)}`}
+              href={`/archive?tag=${encodeURIComponent(tag)}`}
               class="search-item flex items-center justify-between rounded-2xl px-4 py-3 hover:bg-[color:var(--surface-soft)]"
               data-search-item={tag}
             >

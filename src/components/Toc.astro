@@ -1,25 +1,85 @@
 ---
-const items = [
-  { href: "#why-astro", label: "为什么选择 Astro" },
-  { href: "#structure", label: "项目结构设计" },
-  { href: "#typography", label: "写作体验优化" },
-  { href: "#deploy", label: "静态部署策略" },
-  { href: "#summary", label: "总结" }
-];
+type TocItem = {
+  href: string;
+  label: string;
+};
+
+type Props = {
+  items?: TocItem[];
+};
+
+const { items = [] } = Astro.props;
 ---
 
-<aside class="sticky top-24 hidden xl:block">
-  <div class="surface-card rounded-[20px] p-5">
-    <h2 class="text-sm font-bold text-[color:var(--text)]">目录</h2>
-    <nav class="mt-4 grid gap-3 text-sm" aria-label="文章目录">
-      {
-        items.map((item, index) => (
-          <a class="flex gap-3 rounded-xl px-2 py-1.5 text-[color:var(--muted)] hover:bg-[color:var(--surface-soft)] hover:text-[color:var(--primary)]" href={item.href}>
-            <span class="font-mono text-xs tabular-nums">{index + 1}.</span>
-            <span>{item.label}</span>
-          </a>
-        ))
-      }
-    </nav>
-  </div>
-</aside>
+{
+  items.length > 0 && (
+    <aside class="sticky top-24 hidden max-h-[calc(100vh-7rem)] self-start overflow-hidden xl:block">
+      <div class="surface-card flex max-h-[calc(100vh-7rem)] flex-col rounded-[20px] p-5">
+        <h2 class="text-sm font-bold text-[color:var(--text)]">目录</h2>
+        <nav class="mt-4 grid gap-2 overflow-y-auto pr-1 text-sm" aria-label="文章目录" data-toc-nav>
+          {items.map((item, index) => (
+            <a
+              class="flex gap-3 rounded-xl border border-transparent px-2 py-2 text-[color:var(--muted)] transition-colors hover:bg-[color:var(--surface-soft)] hover:text-[color:var(--primary)] aria-[current=location]:border-[color:var(--border)] aria-[current=location]:bg-[color:var(--surface-soft)] aria-[current=location]:text-[color:var(--primary)]"
+              href={item.href}
+              data-toc-link
+            >
+              <span class="font-mono text-xs font-bold tabular-nums">{index + 1}.</span>
+              <span>{item.label}</span>
+            </a>
+          ))}
+        </nav>
+      </div>
+    </aside>
+  )
+}
+
+<script is:inline>
+  (() => {
+    const links = Array.from(document.querySelectorAll("[data-toc-link]"));
+    if (!links.length) return;
+
+    const linkById = new Map(
+      links
+        .map((link) => [link.getAttribute("href")?.slice(1), link])
+        .filter(([id]) => Boolean(id))
+    );
+    const headings = Array.from(linkById.keys())
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+
+    const setActive = (id) => {
+      links.forEach((link) => {
+        const isActive = link.getAttribute("href") === `#${id}`;
+        if (isActive) {
+          link.setAttribute("aria-current", "location");
+          link.scrollIntoView({ block: "nearest" });
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+    };
+
+    const syncActiveHeading = () => {
+      const readingLine = 150;
+      const activeHeading =
+        headings
+          .filter((heading) => heading.getBoundingClientRect().top <= readingLine)
+          .at(-1) ?? headings[0];
+      if (activeHeading) setActive(activeHeading.id);
+    };
+
+    let ticking = false;
+    const requestSync = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        syncActiveHeading();
+        ticking = false;
+      });
+    };
+
+    window.addEventListener("scroll", requestSync, { passive: true });
+    window.addEventListener("resize", requestSync);
+    syncActiveHeading();
+  })();
+</script>

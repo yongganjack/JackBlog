@@ -19,10 +19,39 @@ export const siteConfig = {
 
 ## Articles
 
-文章数据位于 `articles` 数组。每篇文章包含：
+文章以 Markdown 文件维护，放在 `src/content/blog/`。文件名会成为文章地址的一部分，例如：
+
+```text
+src/content/blog/my-new-post.md
+```
+
+对应访问地址：
+
+```text
+/post/my-new-post
+```
+
+每篇文章需要在文件顶部写 frontmatter：
+
+```md
+---
+title: "文章标题"
+excerpt: "文章摘要"
+date: "2026-07-13"
+updated: "2026-07-14"
+readTime: "8 分钟阅读"
+category: "AI"
+tags: ["AI", "LLM"]
+cover: "/images/cover-ai.svg"
+featured: true
+---
+
+正文从这里开始。
+```
+
+字段说明：
 
 - `title`：文章标题。
-- `slug`：文章标识，后续迁移动态路由时可作为 URL。
 - `excerpt`：摘要。
 - `date` / `updated`：发布日期和更新时间。
 - `readTime`：阅读时间。
@@ -31,11 +60,7 @@ export const siteConfig = {
 - `cover`：封面图路径。
 - `featured`：是否在首页精选区域展示。
 
-当前 `/post` 是演示详情页。后续可以改成动态路由：
-
-```text
-src/pages/post/[slug].astro
-```
+分类和标签数量会根据 `src/content/blog/` 里的 Markdown 自动统计，不需要手动维护。
 
 ## Projects
 
@@ -66,7 +91,7 @@ src/pages/post/[slug].astro
 
 ## Tags and Categories
 
-分类和标签用于首页、文章列表、标签页和搜索页。更新 `categories` 和 `tags` 后，相关页面会自动读取新数据。
+分类和标签用于首页、文章列表、标签页和搜索页。更新文章 frontmatter 里的 `category` 和 `tags` 后，相关页面会自动读取新数据。
 
 ## Copywriting
 

@@ -1,0 +1,179 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import ArticleCard from "@/components/ArticleCard.astro";
+import Icon from "@/components/Icon.astro";
+import Toc from "@/components/Toc.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getArticles, toArticle, type Article } from "@/data/articles";
+import { formatDate } from "@/data/format";
+
+type Props = {
+  entry: CollectionEntry<"blog">;
+  article: Article;
+  previousArticle?: Article;
+  nextArticle?: Article;
+  relatedArticles: Article[];
+};
+
+export async function getStaticPaths() {
+  const entries = await getCollection("blog");
+  const articles = await getArticles();
+
+  return entries.map((entry) => {
+    const article = toArticle(entry);
+    const articleIndex = articles.findIndex((item) => item.slug === article.slug);
+    const relatedArticles = articles
+      .filter((item) => item.slug !== article.slug)
+      .sort((itemA, itemB) => {
+        const itemAScore = itemA.category === article.category ? 0 : 1;
+        const itemBScore = itemB.category === article.category ? 0 : 1;
+        return itemAScore - itemBScore;
+      })
+      .slice(0, 3);
+
+    return {
+      params: { slug: article.slug },
+      props: {
+        entry,
+        article,
+        previousArticle: articleIndex > 0 ? articles[articleIndex - 1] : undefined,
+        nextArticle: articleIndex >= 0 ? articles[articleIndex + 1] : undefined,
+        relatedArticles
+      }
+    };
+  });
+}
+
+const { entry, article, previousArticle, nextArticle, relatedArticles } = Astro.props;
+const { Content, headings } = await render(entry);
+const tocItems = headings
+  .filter((heading) => heading.depth === 2)
+  .map((heading) => ({ href: `#${heading.slug}`, label: heading.text }));
+---
+
+<BaseLayout title={article.title} description={article.excerpt}>
+  <article class="article-shell pb-12 pt-16" data-article-shell>
+    <div class="grid gap-10 xl:grid-cols-[minmax(0,var(--article-width,760px))_260px] xl:justify-center">
+      <div class="min-w-0">
+        <header>
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm font-semibold text-[color:var(--muted)]">
+            <span>{article.category}</span>
+            <span class="h-1 w-1 rounded-full bg-[color:var(--border)]"></span>
+            <span class="inline-flex items-center gap-1"><Icon name="calendar" size={15} />发布于 {formatDate(article.date)}</span>
+            <span class="inline-flex items-center gap-1"><Icon name="clock" size={15} />{article.readTime}</span>
+          </div>
+          <h1 class="mt-5 text-balance text-4xl font-extrabold leading-tight text-[color:var(--text)] md:text-[48px]">{article.title}</h1>
+          <p class="mt-5 text-lg leading-9 text-[color:var(--muted)]">{article.excerpt}</p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            {article.tags.map((tag) => <a class="tag-pill" href={`/archive?tag=${encodeURIComponent(tag)}`}>{tag}</a>)}
+          </div>
+          <div class="mt-6 flex max-w-md flex-wrap items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3 shadow-soft" data-article-width-control>
+            <label class="text-xs font-bold text-[color:var(--muted)]" for="article-width">阅读宽度</label>
+            <input
+              id="article-width"
+              type="range"
+              min="680"
+              max="960"
+              step="40"
+              value="760"
+              class="min-w-36 flex-1 accent-[color:var(--primary)]"
+              data-article-width
+            />
+            <output class="w-12 text-right font-mono text-xs font-bold tabular-nums text-[color:var(--primary)]" for="article-width" data-article-width-output>760</output>
+          </div>
+        </header>
+
+        <img
+          src={article.cover}
+          alt=""
+          width="720"
+          height="420"
+          fetchpriority="high"
+          class="mt-10 aspect-[16/9] w-full rounded-[24px] object-cover shadow-soft"
+        />
+
+        <div class="article-prose mt-10">
+          <Content />
+        </div>
+
+        {(previousArticle || nextArticle) && (
+          <nav class="mt-12 grid gap-4 sm:grid-cols-2" aria-label="上一篇和下一篇">
+            {
+              previousArticle ? (
+                <a href={`/post/${previousArticle.slug}`} class="surface-card rounded-[20px] p-5 hover:border-[color:var(--primary)]">
+                  <span class="text-xs font-bold text-[color:var(--muted)]">上一篇</span>
+                  <span class="mt-2 block font-bold text-[color:var(--text)]">{previousArticle.title}</span>
+                </a>
+              ) : (
+                <span></span>
+              )
+            }
+            {
+              nextArticle && (
+                <a href={`/post/${nextArticle.slug}`} class="surface-card rounded-[20px] p-5 text-right hover:border-[color:var(--primary)]">
+                  <span class="text-xs font-bold text-[color:var(--muted)]">下一篇</span>
+                  <span class="mt-2 block font-bold text-[color:var(--text)]">{nextArticle.title}</span>
+                </a>
+              )
+            }
+          </nav>
+        )}
+
+        <section class="mt-12">
+          <h2 class="section-title">相关文章</h2>
+          <div class="mt-6 grid gap-5 md:grid-cols-3">
+            {relatedArticles.map((item) => <ArticleCard article={item} compact />)}
+          </div>
+        </section>
+
+        <section class="surface-card mt-12 rounded-[20px] p-6">
+          <h2 class="text-lg font-bold text-[color:var(--text)]">评论</h2>
+          <p class="mt-2 text-sm leading-7 text-[color:var(--muted)]">评论系统将在接入 Giscus 后启用。现在可以通过邮件或 GitHub 与我交流。</p>
+        </section>
+      </div>
+      <Toc items={tocItems} />
+    </div>
+  </article>
+</BaseLayout>
+
+<script is:inline>
+  (() => {
+    const key = "jack-blog-article-width";
+    const shell = document.querySelector("[data-article-shell]");
+    const input = document.querySelector("[data-article-width]");
+    const output = document.querySelector("[data-article-width-output]");
+    if (!shell || !input || !output) return;
+
+    const min = Number(input.min);
+    const max = Number(input.max);
+    const clamp = (value) => Math.min(max, Math.max(min, value));
+    const storage = {
+      get() {
+        try {
+          return window.localStorage.getItem(key);
+        } catch {
+          return null;
+        }
+      },
+      set(value) {
+        try {
+          window.localStorage.setItem(key, value);
+        } catch {
+          // Width control still works for the current page when storage is unavailable.
+        }
+      }
+    };
+
+    const applyWidth = (value) => {
+      const width = clamp(Number(value) || Number(input.value));
+      input.value = String(width);
+      output.value = String(width);
+      output.textContent = String(width);
+      shell.style.setProperty("--article-width", `${width}px`);
+      storage.set(String(width));
+    };
+
+    applyWidth(storage.get() ?? input.value);
+    input.addEventListener("input", () => applyWidth(input.value));
+  })();
+</script>

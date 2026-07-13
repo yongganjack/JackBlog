@@ -5,7 +5,7 @@ type Props = {
   href?: string;
 };
 
-const { label, count, href = `/tags?tag=${encodeURIComponent(label)}` } = Astro.props;
+const { label, count, href = `/archive?tag=${encodeURIComponent(label)}` } = Astro.props;
 ---
 
 <a class="tag-pill hover:border-[color:var(--primary)] hover:text-[color:var(--primary)]" href={href}>
