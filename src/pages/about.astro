@@ -1,14 +1,25 @@
 ---
 import Icon from "@/components/Icon.astro";
-import TagPill from "@/components/TagPill.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { getArticles, getTags } from "@/data/articles";
 import { friendLinks, siteConfig, timeline } from "@/data/site";
 
-const articles = await getArticles();
-const tags = await getTags(articles);
-
 const getLinkHost = (url: string) => new URL(url).hostname.replace(/^www\./, "");
+
+const researchExperiences = [
+  
+  {
+    time: "2024.10",
+    type: "竞赛",
+    title: "高教社杯全国大学生数学建模竞赛-湖南赛区一等奖",
+    description: "负责数学模型建立与算法实现，完成模型求解、程序开发及结果分析，参与论文撰写。"
+  },
+  {
+    time: "2024.04",
+    type: "竞赛",
+    title: "蓝桥杯全国软件和信息技术专业人才大赛-湖南赛区二等奖（B组）",
+    description: "完成算法设计、程序开发及调试优化等任务。"
+  }
+] as const;
 ---
 
 <BaseLayout title="关于">
@@ -43,15 +54,29 @@ const getLinkHost = (url: string) => new URL(url).hostname.replace(/^www\./, "")
         <p class="mt-5 text-base leading-8 text-[color:var(--body)]">
           我是重邮26级计算机研究生，最近正在完成师兄安排的暑期基础任务，主要与大模型应用相关。 目前的学习任务包括搭建一个可以简单使用的 Agent，后续会在不定期更新学习记录和项目代码。 欢迎大家给仓库点个 Star ⭐，感谢支持！🙏
         </p>
-        <p class="mt-4 text-base leading-8 text-[color:var(--body)]">
-          我喜欢把复杂系统拆成可理解的小块，也相信高质量的写作能让工程判断变得更清晰。
-        </p>
       </div>
 
       <section class="mt-8">
-        <h2 class="section-title">技能标签</h2>
-        <div class="mt-5 flex flex-wrap gap-3">
-          {tags.slice(0, 12).map(([tag, count]) => <TagPill label={tag} count={count} />)}
+        <h2 class="section-title">科研/竞赛经历</h2>
+        <div class="surface-card mt-5 rounded-[20px] p-5 md:p-6">
+          <div class="divide-y divide-[color:var(--border)]">
+            {
+              researchExperiences.map((item) => (
+                <article class="py-5 first:pt-0 last:pb-0 md:grid md:grid-cols-[7rem_1fr] md:gap-6">
+                  <div class="flex items-center gap-3 md:block">
+                    <div class="font-mono text-sm font-bold tabular-nums text-[color:var(--primary)]">{item.time}</div>
+                    <span class="inline-flex rounded-full border border-[color:var(--border)] px-3 py-1 text-xs font-bold text-[color:var(--primary)] md:mt-3">
+                      {item.type}
+                    </span>
+                  </div>
+                  <div class="mt-3 min-w-0 md:mt-0">
+                    <h3 class="font-bold text-[color:var(--text)]">{item.title}</h3>
+                    <p class="mt-2 text-sm leading-7 text-[color:var(--muted)]">{item.description}</p>
+                  </div>
+                </article>
+              ))
+            }
+          </div>
         </div>
       </section>
 
@@ -81,7 +106,7 @@ const getLinkHost = (url: string) => new URL(url).hostname.replace(/^www\./, "")
       </section>
 
       <section class="mt-10">
-        <h2 class="section-title">经历时间线</h2>
+        <h2 class="section-title">教育经历</h2>
         <div class="timeline-list mt-6">
           {
             timeline.map((item, index) => (
