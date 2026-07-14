@@ -1,0 +1,40 @@
+---
+import Icon from "@/components/Icon.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { friendLinks } from "@/data/site";
+
+const getLinkHost = (url: string) => new URL(url).hostname.replace(/^www\./, "");
+---
+
+<BaseLayout title="友链" description="Jack Blog 的友情链接。">
+  <section class="container-page pb-12 pt-16">
+    <div class="max-w-2xl">
+      <h1 class="text-balance text-4xl font-extrabold leading-tight text-[color:var(--text)] md:text-[40px]">友链</h1>
+      <p class="mt-4 text-base leading-8 text-[color:var(--muted)]">
+        这里收录一些朋友的小站、技术笔记和持续创造中的个人空间。
+      </p>
+    </div>
+
+    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        friendLinks.map((link) => (
+          <a
+            class="surface-card group rounded-[20px] p-5 transition duration-200 hover:-translate-y-0.5 hover:border-[color:var(--primary)] hover:shadow-lift"
+            href={link.url}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <div class="min-w-0">
+                <h2 class="font-bold text-[color:var(--text)] transition group-hover:text-[color:var(--primary)]">{link.name}</h2>
+                <p class="mt-2 text-sm leading-7 text-[color:var(--muted)]">{link.description}</p>
+              </div>
+              <Icon name="external" size={16} class="mt-1 shrink-0 text-[color:var(--muted)] transition group-hover:text-[color:var(--primary)]" />
+            </div>
+            <span class="mt-4 block truncate font-mono text-xs font-bold text-[color:var(--primary)]">{getLinkHost(link.url)}</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

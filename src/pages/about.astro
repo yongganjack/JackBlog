@@ -1,12 +1,15 @@
 ---
 import Icon from "@/components/Icon.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { friendLinks, siteConfig, timeline } from "@/data/site";
-
-const getLinkHost = (url: string) => new URL(url).hostname.replace(/^www\./, "");
+import { siteConfig, timeline } from "@/data/site";
 
 const researchExperiences = [
-  
+  {
+    time: "2025.11",
+    type: "竞赛",
+    title: "高教社杯全国大学生数学建模竞赛-全国一等奖",
+    description: "负责数学模型建立与算法实现，完成模型求解、程序开发及结果分析，参与论文撰写。"
+  },
   {
     time: "2024.10",
     type: "竞赛",
@@ -77,31 +80,6 @@ const researchExperiences = [
               ))
             }
           </div>
-        </div>
-      </section>
-
-      <section class="mt-10">
-        <h2 class="section-title">友链</h2>
-        <div class="mt-6 grid gap-4 sm:grid-cols-2">
-          {
-            friendLinks.map((link) => (
-              <a
-                class="surface-card group rounded-[20px] p-5 transition duration-200 hover:-translate-y-0.5 hover:border-[color:var(--primary)] hover:shadow-lift"
-                href={link.url}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <div class="flex items-start justify-between gap-4">
-                  <div class="min-w-0">
-                    <h3 class="font-bold text-[color:var(--text)] transition group-hover:text-[color:var(--primary)]">{link.name}</h3>
-                    <p class="mt-2 text-sm leading-7 text-[color:var(--muted)]">{link.description}</p>
-                  </div>
-                  <Icon name="external" size={16} class="mt-1 shrink-0 text-[color:var(--muted)] transition group-hover:text-[color:var(--primary)]" />
-                </div>
-                <span class="mt-4 block truncate font-mono text-xs font-bold text-[color:var(--primary)]">{getLinkHost(link.url)}</span>
-              </a>
-            ))
-          }
         </div>
       </section>
 

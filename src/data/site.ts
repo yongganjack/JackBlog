@@ -33,7 +33,7 @@ export const siteConfig: SiteConfig = {
   role: "AI 工程师｜全栈开发者｜独立开发者｜开源爱好者",
   socials: {
     github: "https://github.com/yongganjack",
-    email: "jack1824871823@163.com",
+    email: "mailto:jack1824871823@163.com",
     rss: "/rss.xml",
     x: "https://x.com"
   }
@@ -45,6 +45,7 @@ export const navItems = [
   { label: "精选", href: "/featured" },
   { label: "标签", href: "/tags" },
   { label: "项目", href: "/projects" },
+  { label: "友链", href: "/links" },
   { label: "关于", href: "/about" }
 ];
 

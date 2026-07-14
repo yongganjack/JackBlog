@@ -9,8 +9,9 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 <header class="sticky top-0 z-50 border-b border-[color:var(--border)] bg-[color:var(--bg)]/82 backdrop-blur-xl">
   <div class="container-page flex h-16 items-center justify-between gap-6">
     <a href="/" class="flex min-w-0 items-center gap-2 rounded-full font-bold text-[color:var(--text)]" aria-label="Alex Blog 首页">
-      <span class="grid h-8 w-8 place-items-center rounded-full bg-slate-950 text-white shadow-soft dark:bg-white dark:text-slate-950">
-        <span class="h-2.5 w-2.5 rounded-full bg-[color:var(--primary)]"></span>
+      <span class="relative grid h-9 w-9 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 via-sky-400 to-cyan-300 text-white shadow-soft ring-1 ring-blue-500/20 dark:from-blue-400 dark:via-cyan-300 dark:to-teal-200 dark:text-slate-950">
+        <span class="absolute -right-1 -top-1 h-4 w-4 rounded-full bg-white/35 blur-[1px]"></span>
+        <span class="relative font-mono text-lg font-extrabold leading-none" translate="no">J</span>
       </span>
       <span translate="no">{siteConfig.name}</span>
     </a>
