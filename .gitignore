@@ -24,6 +24,9 @@ Thumbs.db
 !.vscode/extensions.json
 !.vscode/settings.json
 
+# Obsidian
+.obsidian/
+
 # Temporary local output
 coverage/
 playwright-report/
